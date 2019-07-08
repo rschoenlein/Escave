@@ -111,6 +111,10 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </stackView>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="mRX-j6-PTz">
+                                <rect key="frame" x="87" y="220" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </mapView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
@@ -140,6 +144,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="mapView" destination="mRX-j6-PTz" id="vhY-68-9js"/>
                         <outlet property="nameTextField" destination="ipU-Q2-vaK" id="ZxD-HJ-vqf"/>
                         <outlet property="photoImageView" destination="Igm-HT-gzb" id="ePi-aa-rAq"/>
                         <outlet property="ratingControl" destination="Zab-tb-3Qs" id="Rhv-dU-2zS"/>
@@ -193,19 +198,22 @@
         <!--Hunt Started View Controller-->
         <scene sceneID="asH-jd-LaS">
             <objects>
-                <viewController id="Fkc-wq-SL3" customClass="HuntStartedViewController" sceneMemberID="viewController">
+                <viewController id="Fkc-wq-SL3" customClass="HuntStartedViewController" customModule="Escave" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="LfJ-ZJ-Tmk">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="2Gd-FR-DRo">
-                                <rect key="frame" x="20" y="281" width="374" height="334"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="CIg-XL-gTb">
+                                <rect key="frame" x="20" y="219" width="374" height="441"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="4BY-mj-7dc"/>
                     </view>
+                    <connections>
+                        <outlet property="mapView" destination="CIg-XL-gTb" id="N2Z-lO-1FB"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Kdc-Ap-QxI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

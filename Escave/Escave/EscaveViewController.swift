@@ -8,17 +8,26 @@
 
 import UIKit
 import os.log
+import MapKit
+
+//TODO add ability for user to save pins as location(city) option
 
 //class inherits from UIViewController, UITextFieldDelegate(delegate = object that acts in coordination with another object)
-class EscaveViewController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate  {
+class EscaveViewController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate  {
 
     //MARK: Properties
     //store references to ojects on storyboard
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var photoImageView: UIImageView!
     @IBOutlet weak var ratingControl: RatingControl!
-    @IBOutlet weak var saveButton: UIBarButtonItem!
+    @IBOutlet weak var saveButton: UIBarButtonItem!    
+    @IBOutlet weak var mapView: MKMapView!
+    //location manager used to show user location
+    fileprivate let locationManager:CLLocationManager = CLLocationManager();
+    //used to only allow 1 pin at a time
+    var locationSelected: Bool = false;
     
+   
     
     //variable of type Hunt (defined in Hunt.swift)
     var hunt: Hunt?
@@ -41,6 +50,43 @@ class EscaveViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         
         // Enable the Save button only if the text field has a valid Hunt name.
         updateSaveButtonState()
+        
+        
+        //show user location
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = kCLDistanceFilterNone
+        locationManager.startUpdatingLocation()
+        
+        mapView.showsUserLocation = true
+        
+        //default location
+        let latitude: CLLocationDegrees = 38.925560
+        
+        let longitude: CLLocationDegrees = -9.229723
+        
+        let lanDelta: CLLocationDegrees = 0.05
+        
+        let lonDelta: CLLocationDegrees = 0.05
+        
+        let span = MKCoordinateSpan(latitudeDelta: lanDelta, longitudeDelta: lonDelta)
+        
+        let coordinates = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        
+        let region = MKCoordinateRegion(center: coordinates, span: span)
+        
+        mapView.setRegion(region, animated: true)
+        
+        
+        //add tap recognizer to mapView
+        
+        //ui longpress recognizer object used to allow for user to create pins on a long press
+        let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(longPress(gestureRecognizer:)))
+        
+        lpgr.minimumPressDuration = 0.5
+        
+        mapView.addGestureRecognizer(lpgr)
+ 
     }
     
     //MARK: UITextFieldDelegate
@@ -154,5 +200,50 @@ class EscaveViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         // Disable the Save button if the text field is empty.
         let text = nameTextField.text ?? ""
         saveButton.isEnabled = !text.isEmpty
+    }
+    
+    //handles long press on mapViews
+    @objc func longPress(gestureRecognizer:UIGestureRecognizer)
+    {
+        guard gestureRecognizer.state == .began else { return }
+        
+        //only allow 1 pin at a time
+        if(locationSelected == false) {
+            let touchPoint = gestureRecognizer.location(in: self.mapView)
+            
+            let coordinate = mapView.convert(touchPoint, toCoordinateFrom: self.mapView)
+            
+            let annotation = MKPointAnnotation()
+            
+            annotation.coordinate = coordinate
+            annotation.title = "My Place"
+            
+            
+            mapView.addAnnotation(annotation)
+            
+            print("selected annotation", annotation.coordinate)
+        } else {
+            let touchPoint = gestureRecognizer.location(in: self.mapView)
+            
+            let coordinate = mapView.convert(touchPoint, toCoordinateFrom: self.mapView)
+            
+            //remove existing annotations
+            let allAnnotations = self.mapView.annotations
+            self.mapView.removeAnnotations(allAnnotations)
+            
+            //put in new annotation
+            let annotation = MKPointAnnotation()
+            
+            annotation.coordinate = coordinate
+            annotation.title = "My Place"
+            
+            
+            mapView.addAnnotation(annotation)
+            
+            print("selected annotation", annotation.coordinate)
+        }
+       
+        
+        locationSelected = true
     }
 }

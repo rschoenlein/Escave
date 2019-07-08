@@ -11,10 +11,22 @@ import MapKit
 
 class HuntStartedViewController: UIViewController {
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        
+        //show user location
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = kCLDistanceFilterNone
+        locationManager.startUpdatingLocation()
+        
+        mapView.showsUserLocation = true
+        
+        //TODO go to city of current item (found in EscaveViewController)
+
     }
     
     //This variable will hold a starting value of seconds. It could be any amount above 0.
@@ -26,6 +38,8 @@ class HuntStartedViewController: UIViewController {
     
     //MARK: - Properties
     @IBOutlet weak var timerLabel: UILabel!
+    @IBOutlet weak var mapView: MKMapView!
+    fileprivate let locationManager:CLLocationManager = CLLocationManager();
     
     //MARK: - Actions
    
